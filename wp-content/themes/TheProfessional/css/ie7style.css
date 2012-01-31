@@ -1,0 +1,11 @@
+span.sf-sub-indicator {padding-left: 2px;}
+div#header { z-index: 2; position: relative; }
+div#featured { z-index: 1; position: relative; }
+
+a.readmore span { cursor: pointer; }
+
+#breadcrumbs span.sep { height:10px; width: 8px; }
+
+#controllers { padding-left:300px; background:url("../images/controllers-bottom.png") no-repeat scroll right bottom; z-index: 1000; }
+#controllers a span.tooltip { background: #ffffff; }
+#controllers-main { width: 57px; }

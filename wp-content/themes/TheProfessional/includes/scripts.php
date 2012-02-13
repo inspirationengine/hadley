@@ -47,7 +47,9 @@
 			var $featured = jQuery('#featured'),
 				$featured_content = jQuery('#slides'),
 				$controller = jQuery('#controllers'),
+				$controller2 = jQuery('#controllers2'),
 				$slider_control_tab = $controller.find('a');
+				$slider_control_tab2 = $controller2.find('a.switch');
 		
 			if ($featured_content.length) {
 				$controller.css("opacity","0").find('a img').css("opacity","0.7").end().find('a.active img').css("opacity","1");
@@ -85,11 +87,19 @@
 			var ordernum;				
 			
 			function gonext(this_element){
+				ordernum = this_element.attr("rel");
+
+				//console.log("Cur: ", this_element, ordernum);
+				var $control_el2 = jQuery('a.switch[rel="' + ordernum + '"]',$controller2);
+				$controller2.find("a.active").removeClass('active');
+				$control_el2.addClass('active');
+				
+				
 				$controller.find("a.active img").stop().animate({opacity: 0.7},300).parent('a').removeClass('active');
 				
 				this_element.addClass('active').find('img').stop().animate({opacity: 1},300);
 				
-				ordernum = this_element.attr("rel");
+				
 				$featured_content.cycle(ordernum-1);
 				
 				if (typeof interval != 'undefined') {
@@ -103,11 +113,23 @@
 				return false;
 			});
 			
+			 $slider_control_tab2.click(function(){
+			    var rel = jQuery(this).attr("rel");
+			    var $controlel = jQuery('a[rel="' + rel + '"]',$controller);
+			    //console.log("g", rel, $controlel);
+			    
+        		    gonext($controlel);
+        		    return false;
+    			});
+
+			
 			
 			var $nextArrow = jQuery('a#right-arrow'),
-				$prevArrow = jQuery('a#left-arrow');
+				$nextArrow2 = jQuery('a#right-arrow2'),
+				$prevArrow = jQuery('a#left-arrow'),
+				$prevArrow2 = jQuery('a#left-arrow2');
 			
-			$nextArrow.click(function(){
+			var nextMethod = function(){
 				var activeSlide = $controller.find('a.active').attr("rel"),
 					$nextSlide = $controller.find('a:eq('+ activeSlide +')');
 				
@@ -115,9 +137,9 @@
 				else gonext($controller.find('a:eq(0)'));
 				
 				return false;
-			});
+			};
 			
-			$prevArrow.click(function(){
+			var prevMethod = function(){
 				var activeSlide = $controller.find('a.active').attr("rel")-2,
 					$nextSlide = $controller.find('a:eq('+ activeSlide +')');
 								
@@ -128,8 +150,14 @@
 				};
 				
 				return false;
-			});
-					
+			};
+			
+			$nextArrow.click(nextMethod);
+			$nextArrow2.click(nextMethod);
+			
+			$prevArrow.click(prevMethod);
+			$prevArrow2.click(prevMethod);
+			
 						
 			<?php if (get_option($shortname.'_slider_auto') == 'on') { ?>
 				auto_rotate();

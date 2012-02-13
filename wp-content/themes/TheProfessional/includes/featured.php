@@ -85,4 +85,18 @@
 	<a href="#" id="left-arrow"><?php esc_html_e('Previous','Professional'); ?></a>
 	<a href="#" id="right-arrow"><?php esc_html_e('Next','Professional'); ?></a>
 	
+	<div id="controllers-wrapper2">
+		<div id="controllers2">
+			<a href="#" id="left-arrow2"><?php esc_html_e('Previous','Professional'); ?></a>
+			
+			<?php for ($i=1; $i <= count($ids); $i++) { ?>
+				<a href="#" rel="<?php echo $i; ?>" class="switch<?php if ($i == 1) echo(' active'); ?>"><?php echo $i; ?></a>
+			<?php } ?>
+			
+			<a href="#" id="right-arrow2"><?php esc_html_e('Next','Professional'); ?></a>
+		</div>	<!-- end #controllers -->
+		<div id="controllers-right2"></div>
+	</div> <!-- end #controllers-wrapper -->
+
+	
 </div> <!-- end #featured -->

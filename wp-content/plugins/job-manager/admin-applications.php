@@ -3,7 +3,7 @@ function jobman_list_applications() {
 	global $wpdb;
 	$options = get_option( 'jobman_options' );
 
-	$deleted = false;
+    $deleted = false;
 	$emailed = false;
 	if(array_key_exists( 'jobman-mass-edit', $_REQUEST ) && 'delete' == $_REQUEST['jobman-mass-edit'] ) {
 		if( array_key_exists( 'jobman-delete-confirmed', $_REQUEST ) ) {
@@ -507,7 +507,14 @@ function jobman_list_applications() {
 			if( array_key_exists( 'rating', $appdata ) )
 				$rating = $appdata['rating'];
 
-			jobman_print_rating_stars( $app->ID, $rating );
+            // $current_user = wp_get_current_user();
+            $sql = "select * from jobman_rating where applicant_id = ". $app->ID;
+            $arrRatingForCurrApplicant = $wpdb->get_results($sql) ;
+            for ($i=0; $i<count($arrRatingForCurrApplicant); $i++){
+                //var_dump($arrRatingForCurrApplicant[$i]);
+                jobman_print_rating_stars( $app->ID, $arrRatingForCurrApplicant[$i]->rating );
+            }
+
 ?>
 				</td>
 			</tr>
@@ -930,6 +937,4 @@ function get_most_recent_interview($applicant_id){
     return $interviews[0];
 }
 
-$current_user = wp_get_current_user();
-var_dump($current_user->data->ID);
 ?>

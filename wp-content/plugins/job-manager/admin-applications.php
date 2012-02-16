@@ -543,12 +543,35 @@ function jobman_list_applications() {
 }
 
 function jobman_rate_application() {
-	$rating = get_post_meta( $_REQUEST['appid'], 'rating', true );
+    GLOBAL $wpdb;
+    $current_user = wp_get_current_user();
+    $sql = "select * from jobman_rating where user_id = ". $current_user->data->ID;
+    $arrRatingByCurrUser = $wpdb->get_results($sql) ;
+
+
+    if (count($arrRatingByCurrUser)>0){
+        // update rating for current user
+        $data = array('rating' => $_REQUEST['rating']);
+        $where = array("user_id" => $current_user->data->ID);
+        $wpdb->update('jobman_rating', $data, $where);
+    }
+    else {
+        // create rating for current user
+        $data = array
+        (
+            'applicant_id' => $_REQUEST['appid'],
+            'user_id' => $current_user->data->ID,
+            'rating' => $_REQUEST['rating']
+        );
+        $wpdb->insert('jobman_rating', $data);
+    }
+    
+	/*$rating = get_post_meta( $_REQUEST['appid'], 'rating', true );
 	if( '' == $rating )
 		add_post_meta( $_REQUEST['appid'], 'rating', $_REQUEST['rating'], true );
 	else
 	    update_post_meta( $_REQUEST['appid'], 'rating', $_REQUEST['rating'] );
-
+    */
 	die();
 }
 
@@ -906,4 +929,7 @@ function get_most_recent_interview($applicant_id){
 	$interviews = get_posts( $filter );
     return $interviews[0];
 }
+
+$current_user = wp_get_current_user();
+var_dump($current_user->data->ID);
 ?>

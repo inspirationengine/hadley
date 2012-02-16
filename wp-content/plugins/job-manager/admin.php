@@ -1,5 +1,7 @@
 <?php //encoding: utf-8
 
+// user handling functions
+require_once( ABSPATH . WPINC . '/pluggable.php' );
 // Admin Settings
 require_once( JOBMAN_DIR . '/admin-settings.php' );
 // Frontend Display Settings

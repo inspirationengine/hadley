@@ -47,10 +47,10 @@ function jobman_create_widget( $function, $title, $params = array() ) {
 <?php
 }
 
-function jobman_print_rating_stars( $id, $rating, $callback = 'jobman_rate_application', $readonly = false ) {
-	if( $readonly )
+function jobman_print_rating_stars( $id, $rating, $callback = 'jobman_rate_application', $readonly = false, $hideResetRating = false ) {
+	/*if( $readonly )
 		$class = "star-holder-readonly";
-	else
+	else*/
 		$class = "star-holder";
 ?>
 			        <div class="<?php echo $class ?>">
@@ -60,7 +60,9 @@ function jobman_print_rating_stars( $id, $rating, $callback = 'jobman_rate_appli
 						<input type="hidden" id="jobman-rating-<?php echo $id ?>" name="jobman-rating" value="<?php echo $rating ?>" />
 						<input type="hidden" name="callbackid" value="<?php echo $id ?>" />
 						<input type="hidden" name="callbackfunction" value="<?php echo $callback ?>" />
+                        <? //if ( ! $hideResetRating ){ ?>
 						<a href="#" onclick="jobman_reset_rating('<?php echo $id ?>', '<?php echo $callback ?>'); return false;"><?php _e( 'No rating', 'jobman' ) ?></a>
+                        <? //}// endif for hiding rating ?>
 <?php
 	}
 ?>

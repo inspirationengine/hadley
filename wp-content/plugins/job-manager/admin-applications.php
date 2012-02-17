@@ -503,16 +503,12 @@ function jobman_list_applications() {
 				echo __( 'Interviews', 'jobman' ) . ": <a href='?page=jobman-interviews&amp;display=application&filter=$app->ID'>" . count( $iids ) . '</a><br/>';
 			}
 
-			$rating = 0;
-			if( array_key_exists( 'rating', $appdata ) )
-				$rating = $appdata['rating'];
-
-            // $current_user = wp_get_current_user();
             $sql = "select * from jobman_rating where applicant_id = ". $app->ID;
             $arrRatingForCurrApplicant = $wpdb->get_results($sql) ;
             for ($i=0; $i<count($arrRatingForCurrApplicant); $i++){
-                //var_dump($arrRatingForCurrApplicant[$i]);
-                jobman_print_rating_stars( $app->ID, $arrRatingForCurrApplicant[$i]->rating );
+                $user = get_userdata($arrRatingForCurrApplicant[$i]->user_id);
+                jobman_print_rating_stars( $app->ID, $arrRatingForCurrApplicant[$i]->rating, 'jobman_rate_application', true );
+                if($user->data->display_name) echo "<span>rated by </span>" . $user->data->display_name;
             }
 
 ?>

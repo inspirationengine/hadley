@@ -256,5 +256,4 @@ function jobman_print_translators_box() {
 <?php
 }
 
-var_dump(array_key_exists( 'appid', $_REQUEST ));
 ?>

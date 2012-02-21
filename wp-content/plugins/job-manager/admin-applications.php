@@ -556,7 +556,7 @@ function jobman_rate_application() {
     if (count($arrRatingByCurrUser)>0){
         // update rating for current user
         $data = array('rating' => intval($_REQUEST['rating']));
-        $where = array("user_id" => $current_user->data->ID);
+        $where = array("user_id" => $current_user->data->ID, 'applicant_id' => intval($_REQUEST['appid']));
         $wpdb->update('jobman_rating', $data, $where);
     }
     else {

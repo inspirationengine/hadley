@@ -729,7 +729,7 @@ function jobman_application_display_details( $appid ) {
 
 function jobman_application_email_form() {
     GLOBAL $wpdb;
-    $sql = 'select * from jobman_invited_colleagues';
+    $sql = 'select * from jobman_invited_colleagues where applicant_id = ' . intval($_REQUEST['appid']);
     $arrInvited = $wpdb->get_results($sql);
 ?>
 		<div class="emailapplication">

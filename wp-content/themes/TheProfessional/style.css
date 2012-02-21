@@ -458,6 +458,11 @@ div.sidebar-service form.product-search input, div.sidebar-service form.product-
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
+    
+    -moz-box-shadow:    1px 3px 5px 0 #ccc;
+    -webkit-box-shadow: 1px 3px 5px 0 #ccc;
+    box-shadow:         1px 3px 5px 0 #ccc;
+    
     width: 183px;
     font-family: Georgia, serif; 
     font-style: italic; 

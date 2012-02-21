@@ -1,5 +1,13 @@
 <?php get_header(); ?>
 	
+	<div id="sidebar-homepage" class="sidebar">
+		<div class="content-top"></div>
+		<div class="content clearfix">
+		    <?php dynamic_sidebar( 'home_page' ); ?>
+		</div>
+		<div id="content-bottom"<?php if (get_option('professional_blog_style') == 'on') echo(' class="bottom-alt"'); ?>></div>
+	</div>
+	
 	<div id="content-top"<?php if (get_option('professional_blog_style') == 'on') echo(' class="top-alt"'); ?>></div>
 	<div id="content" class="clearfix<?php if (get_option('professional_blog_style') == 'on') echo(' content-alt'); ?>">
 		<?php if (get_option('professional_blog_style') == 'false') { ?>

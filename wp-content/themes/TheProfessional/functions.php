@@ -1,4 +1,26 @@
 <?php 
+
+/*
+if ( function_exists('register_sidebars') ){
+    register_sidebars(2);
+}
+*/
+add_action( 'widgets_init', 'hadley_register_sidebar' );
+function hadley_register_sidebar() {
+	register_sidebar(
+		array(
+			'name' => __('Home page'),
+			'id' => 'home_page',
+			'description' => __( 'Widgets on home page' ),
+			'before_widget' => '<div id="%1$s" class="homewidget %2$s">',
+			'after_widget' => '</div>',
+			'before_title' => '<h2 class="widgettitle">',
+			'after_title' => '</h2>',
+	));
+}
+
+
+
 add_action( 'after_setup_theme', 'et_setup_theme' );
 if ( ! function_exists( 'et_setup_theme' ) ){
 	function et_setup_theme(){
@@ -51,3 +73,6 @@ if ( ! function_exists( 'et_list_pings' ) ){
 		<li id="comment-<?php comment_ID(); ?>"><?php comment_author_link(); ?> - <?php comment_excerpt(); ?>
 	<?php } 
 } ?>
+
+
+    

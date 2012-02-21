@@ -73,6 +73,3 @@ if ( ! function_exists( 'et_list_pings' ) ){
 		<li id="comment-<?php comment_ID(); ?>"><?php comment_author_link(); ?> - <?php comment_excerpt(); ?>
 	<?php } 
 } ?>
-
-
-    

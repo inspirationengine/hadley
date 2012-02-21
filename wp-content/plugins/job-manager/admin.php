@@ -98,7 +98,16 @@ addLoadEvent(function() {
 								buttonImageOnly: true
 							});
 	jQuery(".column-cb > *").click(function() { jQuery(".check-column > *").attr('checked', jQuery(this).is(':checked')) } );
-	jQuery("div.star-holder img").click(function() {
+
+<?php
+
+// allow mouseover event for rating feature only for application editing page, when
+// when appid is passed
+
+if(array_key_exists( 'appid', $_REQUEST ) ) {
+    ?>    
+
+    jQuery("div.star-holder img").click(function() {
 	    var cssclass = jQuery(this).parent().attr("class");
 		var count = cssclass.replace("star star", "");
 		jQuery(this).parent().parent().find('input[name="jobman-rating"]').attr("value", count);
@@ -117,7 +126,7 @@ addLoadEvent(function() {
 			jQuery.post( ajaxurl, callback );
 		}
 	});
-	
+
 	jQuery("div.star-holder img").mouseenter(function() {
 	    var cssclass = jQuery(this).parent().attr("class");
 		var count = cssclass.replace("star star", "");
@@ -128,9 +137,11 @@ addLoadEvent(function() {
 		var count = jQuery(this).parent().parent().find('input[name="jobman-rating"]').attr("value");
 		jQuery(this).parent().parent().find("div.star-rating").css("width", (count * 19) + "px");
 	});
-	
+
 <?php
-	if( user_can_richedit()  && version_compare( $wp_version, '3.3-aortic-dissection', '<' ) ) {
+}// endif for if(array_key_exists( 'appid', $_REQUEST ) )
+
+    if( user_can_richedit()  && version_compare( $wp_version, '3.3-aortic-dissection', '<' ) ) {
 ?>
 	var jobman_textareas = <?php echo json_encode( $textareas ) ?>;
 
@@ -244,4 +255,6 @@ function jobman_print_translators_box() {
 		</ul>
 <?php
 }
+
+var_dump(array_key_exists( 'appid', $_REQUEST ));
 ?>

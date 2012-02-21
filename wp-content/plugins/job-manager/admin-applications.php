@@ -548,13 +548,14 @@ function jobman_list_applications() {
 function jobman_rate_application() {
     GLOBAL $wpdb;
     $current_user = wp_get_current_user();
-    $sql = "select * from jobman_rating where user_id = ". $current_user->data->ID;
+    $sql = "select * from jobman_rating where user_id = ". $current_user->data->ID .
+        " and applicant_id=" . intval($_REQUEST['appid']);
     $arrRatingByCurrUser = $wpdb->get_results($sql) ;
 
 
     if (count($arrRatingByCurrUser)>0){
         // update rating for current user
-        $data = array('rating' => $_REQUEST['rating']);
+        $data = array('rating' => intval($_REQUEST['rating']));
         $where = array("user_id" => $current_user->data->ID);
         $wpdb->update('jobman_rating', $data, $where);
     }
@@ -562,7 +563,7 @@ function jobman_rate_application() {
         // create rating for current user
         $data = array
         (
-            'applicant_id' => $_REQUEST['appid'],
+            'applicant_id' => intval($_REQUEST['appid']),
             'user_id' => $current_user->data->ID,
             'rating' => $_REQUEST['rating']
         );
@@ -606,7 +607,7 @@ function jobman_application_details_layout( $appid ) {
 				);
 	$titles = array(
 				array( __( 'Application', 'jobman' ) ),
-				array( __( 'Application Comments', 'jobman' ), __( 'Share Application', 'jobman' ) )
+				array( __( 'Application Comments', 'jobman' ), __( 'Share Interview', 'jobman' ) )
 			);
 	$params = array(
 					array( array( $appid ) ),
@@ -732,7 +733,7 @@ function jobman_application_email_form() {
     $arrInvited = $wpdb->get_results($sql);
 ?>
 		<div class="emailapplication">
-			<p><?php _e( 'Use this form to email the application to a new email address.', 'jobman' ) ?></p>
+			<p>Use this form to invite colleagues to the scheduled Interview</p>
 			<form action="" method="post">
 <?php
 			wp_nonce_field( 'jobman-reemail-application' );

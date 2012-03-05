@@ -108,7 +108,11 @@ if(array_key_exists( 'appid', $_REQUEST ) ) {
     ?>    
 
     jQuery("div.star-holder img").click(function() {
-	    var cssclass = jQuery(this).parent().attr("class");
+	    // enable comments for rating
+        jQuery('#rating_comment_txt').removeAttr('disabled');
+        jQuery('#rating_comment_submit').removeAttr('disabled');
+
+        var cssclass = jQuery(this).parent().attr("class");
 		var count = cssclass.replace("star star", "");
 		jQuery(this).parent().parent().find('input[name="jobman-rating"]').attr("value", count);
 		jQuery(this).parent().parent().find("div.star-rating").css("width", (count * 19) + "px");
@@ -169,7 +173,7 @@ if(array_key_exists( 'appid', $_REQUEST ) ) {
 function jobman_reset_rating( id, func ) {
 	jQuery( "#jobman-rating-" + id ).attr("value", 0);
 	jQuery( "#jobman-star-rating-" + id ).css("width", "0px");
-	
+	alert('jobman_reset_rating')
 	if( "filter" != id ) {
 		callback = {
 				action: func,

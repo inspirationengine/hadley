@@ -5,3 +5,5 @@ CREATE TABLE IF NOT EXISTS `jobman_rating` (
   `rating` int(1) NOT NULL,
    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=0;
+
+ALTER TABLE `jobman_rating` ADD `comment` TEXT NULL DEFAULT NULL;

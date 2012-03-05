@@ -508,6 +508,7 @@ function jobman_list_applications() {
             for ($i=0; $i<count($arrRatingForCurrApplicant); $i++){
                 $user = get_userdata($arrRatingForCurrApplicant[$i]->user_id);
                 jobman_print_rating_stars( $app->ID, $arrRatingForCurrApplicant[$i]->rating, 'jobman_rate_application', true );
+                if ($arrRatingForCurrApplicant[$i]->comment) echo "<span>" .$arrRatingForCurrApplicant[$i]->comment. "</span><br/>";
                 if($user->data->display_name) echo "<span>rated by </span>" . $user->data->display_name;
             }
 
@@ -588,6 +589,11 @@ function jobman_application_details_layout( $appid ) {
             jobman_email_application( $appid, $_REQUEST['jobman-email'] );
 	}
 
+    if( array_key_exists( 'rating_comment_txt', $_REQUEST ) ) {
+		check_admin_referer( 'jobman-comment-rate' );
+        add_rating_comment($appid, $_REQUEST['rating_comment_txt']);
+	}
+
 	if( array_key_exists( 'new-interview', $_REQUEST ) )
 		jobman_interview_new();
 
@@ -627,7 +633,7 @@ function jobman_application_details_layout( $appid ) {
 }
 
 function jobman_application_display_details( $appid ) {
-	$options = get_option( 'jobman_options' );
+    $options = get_option( 'jobman_options' );
 	$fromid = $options['application_email_from'];
 
 	$app = get_post( $appid );
@@ -681,8 +687,24 @@ function jobman_application_display_details( $appid ) {
 	    	$rating = $appdata['rating'];
 
 		jobman_print_rating_stars( $app->ID, $rating );
-		
+
 		echo '</div></td><tr><td colspan="2">&nbsp;</td></tr>';
+
+        GLOBAL $wpdb;
+        $current_user = wp_get_current_user();
+        $sql = "select * from jobman_rating where user_id = ". $current_user->data->ID .
+        " and applicant_id=" . intval($appid);
+        $arrComment = $wpdb->get_row($sql) ;
+        
+        $strTAreaEnabled = (null != $arrComment->id ) ? '' : "disabled='disabled'";
+        $strComment = ($arrComment->comment) ? $arrComment->comment : '';
+        echo '<tr><th scope="row"><strong>Comment</strong></th>';
+        echo '<td><form action="" method="post">';
+        wp_nonce_field( 'jobman-comment-rate' );
+        echo '<textarea '.$strTAreaEnabled.' rows="5" cols="45" name="rating_comment_txt" id="rating_comment_txt">' .
+             $strComment. '</textarea><br/>';
+        echo '<input '.$strTAreaEnabled.' type="submit" name="rating_comment_submit" id="rating_comment_submit" value="Comment on rating">';
+        echo '</form></td></tr>';
 
 		$fields = $options['fields'];
 		if( count( $fields ) > 0 ) {
@@ -919,6 +941,15 @@ function insert_invited_colleague($applicant_id, $email){
 
     $data = array('applicant_id' => $applicant_id, 'email' => $email);
     $wpdb->insert('jobman_invited_colleagues', $data);
+}
+
+function add_rating_comment($applicant_id, $comment) {
+    GLOBAL $wpdb;
+    $current_user = wp_get_current_user();
+
+    $data = array('comment' => $comment);
+    $where = array("user_id" => $current_user->data->ID, 'applicant_id' => intval($applicant_id));
+    $wpdb->update('jobman_rating', $data, $where);
 }
 
 function get_most_recent_interview($applicant_id){

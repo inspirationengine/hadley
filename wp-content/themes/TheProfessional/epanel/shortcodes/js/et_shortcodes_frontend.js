@@ -247,6 +247,7 @@
 	
 /////// Shortcodes Javascript ///////
 jQuery(document).ready(function($){
+	
 	$et_tooltip = $('.et-tooltip');
 	$et_tooltip.live('mouseover mouseout', function(event){
 		if (event.type == 'mouseover') {
@@ -255,6 +256,9 @@ jQuery(document).ready(function($){
 			$(this).find('.et-tooltip-box').animate({ opacity: 'hide', bottom: '35px' }, 300);
 		}
 	});
+	
+
+	
 	// learn more
 	$et_learn_more = $('.et-learn-more .heading-more');
 	$et_learn_more.live('click', function() {
@@ -268,6 +272,19 @@ jQuery(document).ready(function($){
 	
 	$('.et-learn-more').not('.et-open').find('.learn-more-content').css( { 'visibility' : 'visible', 'display' : 'none' } );
 	
+	
+	var hash = window.location.hash;
+	
+	if (hash) {
+		hash = hash.slice(1);
+		$('.et-learn-more').each(function(el){
+			if( this.id && this.id === hash){
+			    $l_m = $('.heading-more', this);
+			    $l_m.trigger('click');
+			}
+		});
+	}
+
 	var $et_shortcodes_tabs = $('.et-tabs-container, .tabs-left, .et-simple-slider, .et-image-slider');
 	$et_shortcodes_tabs.each(function(i){
 		var et_shortcodes_tab_class = $(this).attr('class'),

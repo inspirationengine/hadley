@@ -1,6 +1,6 @@
 <?php
 function jobman_display_apply( $jobid, $cat = NULL ) {
-	global $si_image_captcha;
+    global $si_image_captcha;
 	get_currentuserinfo();
 
 	$options = get_option( 'jobman_options' );
@@ -30,6 +30,8 @@ function jobman_display_apply( $jobid, $cat = NULL ) {
 			case -1:
 				// No error, stored properly
 				$msg = $options['text']['application_acceptance'];
+                // notify the applicant that his resume is received
+                email_applicant_on_resume_receipt($_REQUEST['jobman-field-4']);
 				break;
 			case -2:
 				// Recent application form same job
@@ -480,7 +482,7 @@ function jobman_app_field_input_html( $id, $field, $data, $mandatory = '' ) {
 }
 
 function jobman_store_application( $jobid, $cat ) {
-	global $current_user;
+    global $current_user;
 	get_currentuserinfo();
 
 	$cat = get_term_by( 'slug', $cat, 'jobman_category' );
@@ -975,4 +977,15 @@ function jobman_email_application( $appid, $sendto = '' ) {
     insert_invited_colleague($appid, $to);
 }
 
+function email_applicant_on_resume_receipt($email_to){
+
+    $subject = 'You successfully applied for a job at Hadley';
+    $msg = 'We received your resume and will be reviewing it for consideration. We will be responding to you shortly';
+    $from = 'Hadley';
+    $header = "From: $from" . PHP_EOL;
+	$header .= "Reply-To: $from" . PHP_EOL;
+	$header .= "Return-Path: $from" . PHP_EOL;
+	$header .= 'Content-type: text/plain; charset='. get_option( 'blog_charset' ) . PHP_EOL;
+    wp_mail( $email_to, $subject, $msg, $header );
+}
 ?>

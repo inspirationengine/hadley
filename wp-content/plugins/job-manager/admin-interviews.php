@@ -285,7 +285,7 @@ function jobman_interview_day( $filter ) {
 ?>
 			<tr>
 				<td><?php echo date( 'H:i', strtotime( $interview->post_date ) ) ?></td>
-				<td><?php jobman_print_rating_stars( $interview->ID, $rating ) ?></td>
+				<td><?php jobman_print_rating_stars( $interview->ID, $rating, 'jobman_rate_application_old' ) ?></td>
 				<td><a href="<?php echo admin_url( "admin.php?page=jobman-interviews&amp;display=interview&amp;filter=$interview->ID" ) ?>"><?php echo $interview->post_title ?></a></td>
 			</tr>
 <?php
@@ -384,7 +384,7 @@ function jobman_interview_application( $aid, $display = 'full' ) {
 ?>
 		<tr>
 			<td><?php echo date( 'Y-m-d H:i', strtotime( $interview->post_date ) ) ?></td>
-			<td><?php jobman_print_rating_stars( $interview->ID, $rating ) ?></td>
+			<td><?php jobman_print_rating_stars( $interview->ID, $rating, 'jobman_rate_application_old' ) ?></td>
 			<td><a href="<?php echo admin_url( "admin.php?page=jobman-interviews&amp;display=interview&amp;filter=$interview->ID" ) ?>"><?php _e( 'Interview Details', 'jobman' ) ?></a></td>
 		</tr>
 <?php

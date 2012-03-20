@@ -78,13 +78,14 @@ function jobman_print_rating_stars( $id, $rating, $callback = 'jobman_rate_appli
 					</div>
 <?php
     // allow mouseover event for rating feature and changing rating only if readonly === false
-    if (! $readonly) { ?>
+    if (! $readonly) {
+
+        ?>
         <script type="text/javascript">
 //<![CDATA[
 
     jQuery("div.star-holder img").click(function() {
 	    // enable comments for rating
-        alert('allow edit: click')
         jQuery('#rating_comment_txt').removeAttr('disabled');
         jQuery('#rating_comment_submit').removeAttr('disabled');
 
@@ -108,12 +109,14 @@ function jobman_print_rating_stars( $id, $rating, $callback = 'jobman_rate_appli
 	});
 
      jQuery("div.star-holder img").mouseenter(function() {
+         //alert('mouseenter');
 	    var cssclass = jQuery(this).parent().attr("class");
 		var count = cssclass.replace("star star", "");
 		jQuery(this).parent().parent().find("div.star-rating").css("width", (count * 19) + "px");
 	});
 
 	jQuery("div.star-holder img").mouseleave(function() {
+        //alert('mouseleave');
 		var count = jQuery(this).parent().parent().find('input[name="jobman-rating"]').attr("value");
 		jQuery(this).parent().parent().find("div.star-rating").css("width", (count * 19) + "px");
 	});

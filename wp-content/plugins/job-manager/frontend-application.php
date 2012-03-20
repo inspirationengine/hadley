@@ -895,7 +895,7 @@ function jobman_email_application( $appid, $sendto = '' ) {
 	}
 	$fromname = trim( $fromname );
 	
-	$from = "\"$fromname\" <$from>";
+	//$from = "\"$fromname\" <$from>";
 	
 	$subject = $options['application_email_subject_text'];
 	if( ! empty( $subject ) )

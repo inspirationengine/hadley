@@ -92,7 +92,7 @@ function jobman_list_applications() {
 					    <th scope="row"><?php _e( 'Minimum Rating', 'jobman' ) ?>:</th>
 					    <td>
 <?php
-	jobman_print_rating_stars( 'filter', $rating );
+        jobman_print_rating_stars( 'filter', $rating, 'jobman_rate_application_old' );
 ?>
 						</td>
 					</tr>
@@ -547,6 +547,19 @@ function jobman_list_applications() {
 <?php
 }
 
+function jobman_rate_application_old() {
+	$rating = get_post_meta( $_REQUEST['appid'], 'rating', true );
+
+	if( '' == $rating )
+		add_post_meta( $_REQUEST['appid'], 'rating', $_REQUEST['rating'], true );
+	else
+	    update_post_meta( $_REQUEST['appid'], 'rating', $_REQUEST['rating'] );
+
+    echo json_encode(array('rating' => $rating));
+
+	die();
+}
+
 function jobman_rate_application() {
     GLOBAL $wpdb;
     $current_user = wp_get_current_user();
@@ -572,12 +585,6 @@ function jobman_rate_application() {
         $wpdb->insert('jobman_rating', $data);
     }
     
-	/*$rating = get_post_meta( $_REQUEST['appid'], 'rating', true );
-	if( '' == $rating )
-		add_post_meta( $_REQUEST['appid'], 'rating', $_REQUEST['rating'], true );
-	else
-	    update_post_meta( $_REQUEST['appid'], 'rating', $_REQUEST['rating'] );
-    */
 	die();
 }
 
@@ -688,15 +695,15 @@ function jobman_application_display_details( $appid ) {
         $current_user = wp_get_current_user();
         $sql = "select * from jobman_rating where user_id = ". $current_user->data->ID .
         " and applicant_id=" . intval($appid);
-        $arrComment = $wpdb->get_row($sql) ;
+        $obj = $wpdb->get_row($sql) ;
 
-        $bReadOnly = (null != $arrComment->id ) ? true : false;
-		jobman_print_rating_stars( $app->ID, $arrComment->rating, "jobman_rate_application", $bReadOnly);
+        $bReadOnly = ('0' === $obj->rating || NULL === $obj->rating) ? false: true;
+		jobman_print_rating_stars( $app->ID, $obj->rating, "jobman_rate_application", $bReadOnly);
 
 		echo '</div></td><tr><td colspan="2">&nbsp;</td></tr>';
 
-        $strTAreaEnabled = (null != $arrComment->id ) ? '' : "disabled='disabled'";
-        $strComment = ($arrComment->comment) ? $arrComment->comment : '';
+        $strTAreaEnabled = (null != $obj->id ) ? '' : "disabled='disabled'";
+        $strComment = ($obj->comment) ? $obj->comment : '';
         echo '<tr><th scope="row"><strong>Comment</strong></th>'  .
         '<td><form action="" method="post">';
 
@@ -951,9 +958,24 @@ function add_rating_comment($applicant_id, $comment) {
     GLOBAL $wpdb;
     $current_user = wp_get_current_user();
 
-    $data = array('comment' => $comment);
-    $where = array("user_id" => $current_user->data->ID, 'applicant_id' => intval($applicant_id));
-    $wpdb->update('jobman_rating', $data, $where);
+    $sql = "select id from jobman_rating where user_id = ". $current_user->data->ID .
+        " and applicant_id=" . intval($applicant_id);
+    $objRatingByCurrUser = $wpdb->get_row($sql) ;
+    if($objRatingByCurrUser->id){
+        $data = array('comment' => $comment);
+        $where = array("user_id" => $current_user->data->ID, 'applicant_id' => intval($applicant_id));
+        $wpdb->update('jobman_rating', $data, $where);
+    }
+    else{
+        $data = array
+        (
+            'applicant_id' => intval($applicant_id),
+            'user_id' => $current_user->data->ID,
+            'comment' => $comment
+        );
+        $wpdb->insert('jobman_rating', $data);
+    }
+
 }
 
 function get_most_recent_interview($applicant_id){

@@ -408,7 +408,8 @@ function jobman_list_applications() {
 			
 			$fromid = $options['application_email_from'];
 			$email = $appdata["data$fromid"];
-			$grav_url = 'http://www.gravatar.com/avatar/' . md5( strtolower( $email ) ) . '?size=45';
+			//$grav_url = 'http://www.gravatar.com/avatar/' . md5( strtolower( $email ) ) . '?size=45';
+            $grav_url = '';
 
 			$parents = get_post_meta( $app->ID, 'job', false );
 			$jobstr = '';
@@ -651,7 +652,8 @@ function jobman_application_display_details( $appid ) {
 	
 	$fromid = $options['application_email_from'];
 	$email = $appdata["data$fromid"];
-	$grav_url = 'http://www.gravatar.com/avatar/' . md5( strtolower( $email ) ) . '?size=120';
+	//$grav_url = 'http://www.gravatar.com/avatar/' . md5( strtolower( $email ) ) . '?size=120';
+    $grav_url = '';
 	echo "<img src='$grav_url' alt='' class='jobman-gravatar' />";
 
 	if( NULL != $app ) {
@@ -682,29 +684,31 @@ function jobman_application_display_details( $appid ) {
 		echo '<tr><th scope="row"><strong>' . __( 'Rating', 'jobman' ) . '</strong></th>';
 		echo '<td>';
 
-		$rating = 0;
-		if( array_key_exists( 'rating', $appdata ) )
-	    	$rating = $appdata['rating'];
-
-		jobman_print_rating_stars( $app->ID, $rating );
-
-		echo '</div></td><tr><td colspan="2">&nbsp;</td></tr>';
-
         GLOBAL $wpdb;
         $current_user = wp_get_current_user();
         $sql = "select * from jobman_rating where user_id = ". $current_user->data->ID .
         " and applicant_id=" . intval($appid);
         $arrComment = $wpdb->get_row($sql) ;
-        
+
+        $bReadOnly = (null != $arrComment->id ) ? true : false;
+		jobman_print_rating_stars( $app->ID, $arrComment->rating, "jobman_rate_application", $bReadOnly);
+
+		echo '</div></td><tr><td colspan="2">&nbsp;</td></tr>';
+
         $strTAreaEnabled = (null != $arrComment->id ) ? '' : "disabled='disabled'";
         $strComment = ($arrComment->comment) ? $arrComment->comment : '';
-        echo '<tr><th scope="row"><strong>Comment</strong></th>';
-        echo '<td><form action="" method="post">';
+        echo '<tr><th scope="row"><strong>Comment</strong></th>'  .
+        '<td><form action="" method="post">';
+
         wp_nonce_field( 'jobman-comment-rate' );
-        echo '<textarea '.$strTAreaEnabled.' rows="5" cols="45" name="rating_comment_txt" id="rating_comment_txt">' .
-             $strComment. '</textarea><br/>';
-        echo '<input '.$strTAreaEnabled.' type="submit" name="rating_comment_submit" id="rating_comment_submit" value="Comment on rating">';
+        echo '<textarea  rows="5" cols="45" name="rating_comment_txt" id="rating_comment_txt"></textarea><br/>';
+        echo '<input type="submit" name="rating_comment_submit" id="rating_comment_submit" value="Comment on rating">';
         echo '</form></td></tr>';
+
+        if ($strComment){
+            echo '<tr><th scope="row"><strong>Comment posted</strong></th>' .
+            '<td>' . $strComment . '</td></tr>';
+        }
 
 		$fields = $options['fields'];
 		if( count( $fields ) > 0 ) {

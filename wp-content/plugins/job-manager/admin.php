@@ -101,50 +101,6 @@ addLoadEvent(function() {
 
 <?php
 
-// allow mouseover event for rating feature only for application editing page, when
-// when appid is passed
-
-if(array_key_exists( 'appid', $_REQUEST ) ) {
-    ?>    
-
-    jQuery("div.star-holder img").click(function() {
-	    // enable comments for rating
-        jQuery('#rating_comment_txt').removeAttr('disabled');
-        jQuery('#rating_comment_submit').removeAttr('disabled');
-
-        var cssclass = jQuery(this).parent().attr("class");
-		var count = cssclass.replace("star star", "");
-		jQuery(this).parent().parent().find('input[name="jobman-rating"]').attr("value", count);
-		jQuery(this).parent().parent().find("div.star-rating").css("width", (count * 19) + "px");
-		
-        var data = jQuery(this).parent().parent().find('input[name="callbackid"]');
-        var func = jQuery(this).parent().parent().find('input[name="callbackfunction"]');
-        var callback;
-        if( data.length > 0 ) {
-			callback = {
-			        action: func[0].value,
-			        appid: data[0].value,
-			        rating: count
-			};
-			
-			jQuery.post( ajaxurl, callback );
-		}
-	});
-
-	jQuery("div.star-holder img").mouseenter(function() {
-	    var cssclass = jQuery(this).parent().attr("class");
-		var count = cssclass.replace("star star", "");
-		jQuery(this).parent().parent().find("div.star-rating").css("width", (count * 19) + "px");
-	});
-
-	jQuery("div.star-holder img").mouseleave(function() {
-		var count = jQuery(this).parent().parent().find('input[name="jobman-rating"]').attr("value");
-		jQuery(this).parent().parent().find("div.star-rating").css("width", (count * 19) + "px");
-	});
-
-<?php
-}// endif for if(array_key_exists( 'appid', $_REQUEST ) )
-
     if( user_can_richedit()  && version_compare( $wp_version, '3.3-aortic-dissection', '<' ) ) {
 ?>
 	var jobman_textareas = <?php echo json_encode( $textareas ) ?>;
@@ -173,7 +129,7 @@ if(array_key_exists( 'appid', $_REQUEST ) ) {
 function jobman_reset_rating( id, func ) {
 	jQuery( "#jobman-rating-" + id ).attr("value", 0);
 	jQuery( "#jobman-star-rating-" + id ).css("width", "0px");
-	alert('jobman_reset_rating')
+	//alert('jobman_reset_rating')
 	if( "filter" != id ) {
 		callback = {
 				action: func,

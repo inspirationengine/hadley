@@ -980,7 +980,7 @@ function jobman_email_application( $appid, $sendto = '' ) {
 function email_applicant_on_resume_receipt($email_to){
 
     $subject = 'You successfully applied for a job at Hadley';
-    $msg = 'We received your resume and will be reviewing it for consideration. We will be responding to you shortly';
+    $msg = 'We received your application, and will be in touch with you shortly';
     $from = 'Hadley';
     $header = "From: $from" . PHP_EOL;
 	$header .= "Reply-To: $from" . PHP_EOL;

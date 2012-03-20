@@ -47,7 +47,7 @@ function jobman_create_widget( $function, $title, $params = array() ) {
 <?php
 }
 
-function jobman_print_rating_stars( $id, $rating, $callback = 'jobman_rate_application', $readonly = false, $hideResetRating = false ) {
+function jobman_print_rating_stars( $id, $rating, $callback = 'jobman_rate_application', $readonly = false, $hideResetRating = true ) {
 	/*if( $readonly )
 		$class = "star-holder-readonly";
 	else*/
@@ -55,14 +55,15 @@ function jobman_print_rating_stars( $id, $rating, $callback = 'jobman_rate_appli
 ?>
 			        <div class="<?php echo $class ?>">
 <?php
-	if( ! $readonly ) {
+    if( ! $readonly ) {
 ?>
+
 						<input type="hidden" id="jobman-rating-<?php echo $id ?>" name="jobman-rating" value="<?php echo $rating ?>" />
 						<input type="hidden" name="callbackid" value="<?php echo $id ?>" />
 						<input type="hidden" name="callbackfunction" value="<?php echo $callback ?>" />
-                        <? //if ( ! $hideResetRating ){ ?>
+                        <? if ( ! $hideResetRating ){ ?>
 						<a href="#" onclick="jobman_reset_rating('<?php echo $id ?>', '<?php echo $callback ?>'); return false;"><?php _e( 'No rating', 'jobman' ) ?></a>
-                        <? //}// endif for hiding rating ?>
+                        <? }// endif for hiding rating ?>
 <?php
 	}
 ?>
@@ -76,6 +77,50 @@ function jobman_print_rating_stars( $id, $rating, $callback = 'jobman_rate_appli
 ?>
 					</div>
 <?php
+    // allow mouseover event for rating feature and changing rating only if readonly === false
+    if (! $readonly) { ?>
+        <script type="text/javascript">
+//<![CDATA[
+
+    jQuery("div.star-holder img").click(function() {
+	    // enable comments for rating
+        alert('allow edit: click')
+        jQuery('#rating_comment_txt').removeAttr('disabled');
+        jQuery('#rating_comment_submit').removeAttr('disabled');
+
+        var cssclass = jQuery(this).parent().attr("class");
+		var count = cssclass.replace("star star", "");
+		jQuery(this).parent().parent().find('input[name="jobman-rating"]').attr("value", count);
+		jQuery(this).parent().parent().find("div.star-rating").css("width", (count * 19) + "px");
+
+        var data = jQuery(this).parent().parent().find('input[name="callbackid"]');
+        var func = jQuery(this).parent().parent().find('input[name="callbackfunction"]');
+        var callback;
+        if( data.length > 0 ) {
+			callback = {
+			        action: func[0].value,
+			        appid: data[0].value,
+			        rating: count
+			};
+
+			jQuery.post( ajaxurl, callback );
+		}
+	});
+
+     jQuery("div.star-holder img").mouseenter(function() {
+	    var cssclass = jQuery(this).parent().attr("class");
+		var count = cssclass.replace("star star", "");
+		jQuery(this).parent().parent().find("div.star-rating").css("width", (count * 19) + "px");
+	});
+
+	jQuery("div.star-holder img").mouseleave(function() {
+		var count = jQuery(this).parent().parent().find('input[name="jobman-rating"]').attr("value");
+		jQuery(this).parent().parent().find("div.star-rating").css("width", (count * 19) + "px");
+	});
+//]]>
+</script>
+<?
+    }
 }
 
 function jobman_load_translation_file() {

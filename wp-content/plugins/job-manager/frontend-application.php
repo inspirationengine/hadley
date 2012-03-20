@@ -915,10 +915,10 @@ function jobman_email_application( $appid, $sendto = '' ) {
 	if( empty( $subject ) )
 		$subject = __( 'Job Application', 'jobman' );
 
-    $interview = get_most_recent_interview($appid);
-	$msg = "You're invited to attend an interview scheduled for " . $interview->post_date . PHP_EOL;
-	
-	$msg .= __( 'Application Link', 'jobman' ) . ': ' . admin_url( 'admin.php?page=jobman-list-applications&appid=' . $app->ID ) . PHP_EOL;
+    //$interview = get_most_recent_interview($appid);
+	//$msg = "You're invited to attend an interview scheduled for " . $interview->post_date . PHP_EOL;
+	$msg = "A new application has been submitted " . PHP_EOL;
+	$msg.= __( 'Application Link', 'jobman' ) . ': ' . admin_url( 'admin.php?page=jobman-list-applications&appid=' . $app->ID ) . PHP_EOL;
 
 	$parents = get_post_meta( $app->ID, 'job', false );
 	if( ! empty( $parents ) ) {

@@ -1,5 +1,7 @@
 <?php // encoding: UTF-8
 function jobman_display_jobs_list( $cat ) {
+
+    $initialCategory = $cat;
 	global $jobman_shortcode_jobs, $jobman_shortcode_all_jobs, $jobman_shortcode_category, $jobman_shortcodes, $jobman_field_shortcodes, $wp_query;
 	$options = get_option( 'jobman_options' );
 
@@ -74,6 +76,7 @@ function jobman_display_jobs_list( $cat ) {
 	
 	$jobs = get_posts( $args );
 
+    
 	$args['posts_per_page'] = '';
 	$args['offset'] = '';
 	$args['numberposts'] = -1;
@@ -112,9 +115,14 @@ function jobman_display_jobs_list( $cat ) {
 		}
 		
 		$content .= '<h3>' . __( 'Related Categories', 'jobman' ) . '</h3>';
-		$content .= implode(', ', $links) . '<br>';
+		$content .= implode('<br>', $links) . '<br>';
 	}
-	
+
+    if ('all' == $initialCategory){
+        $page->post_content = $content;
+    	return array( $page );
+    }
+    
 	$applyform = false;
 	$data = get_posts( 'post_type=jobman_app_form&numberposts=-1' );
 	if( count( $data ) > 0 ) {

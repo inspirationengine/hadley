@@ -26,7 +26,7 @@ function jobman_display_jobs_list( $cat ) {
 			$page->post_name = $category->slug;
 		}
 	}
-	
+    
 	$args = array( 
 				'post_type' => 'jobman_job',
 				'suppress_filters' => false
@@ -75,7 +75,7 @@ function jobman_display_jobs_list( $cat ) {
 	add_filter( 'posts_distinct', 'jobman_job_live_distinct' );
 	
 	$jobs = get_posts( $args );
-
+//var_dump($jobs);
     
 	$args['posts_per_page'] = '';
 	$args['offset'] = '';
@@ -93,29 +93,57 @@ function jobman_display_jobs_list( $cat ) {
 			$content .= jobman_display_login();
 	}
 
+    $arrMapCatToJob = array();
 	$related_cats = array();
+//var_dump($jobs);
 	foreach( $jobs as $id => $job ) {
 		// Get related categories
 		if( $options['related_categories'] ) {
 			$categories = wp_get_object_terms( $job->ID, 'jobman_category' );
+            //var_dump($categories);
 			if( count( $categories ) > 0 ) {
 				foreach( $categories as $cat ) {
 					$related_cats[] = $cat->slug;
+                    $arrMapCatToJob[$cat->slug][] = array('job_link' => $job->guid, 'job_name' => $job->post_title);
 				}
 			}
 		}
 	}
 	$related_cats = array_unique( $related_cats );
-	
+
+    unset($arrMapCatToJob['hadley-warehouse']);
+    //var_dump($arrMapCatToJob);
 	if( $options['related_categories'] && count( $related_cats ) > 0 ) {
 		$links = array();
+        $i = 0;
+        $iCount = sizeof($related_cats);
+        //var_dump($related_cats);
 		foreach( $related_cats as $rc ) {
+            $i++;
 			$cat = get_term_by( 'slug', $rc, 'jobman_category' );
-			$links[] = '<a href="'. get_term_link( $cat->slug, 'jobman_category' ) . '" title="' . sprintf( __( 'Jobs for %s', 'jobman' ), $cat->name ) . '">' . $cat->name . '</a>';
+			/*$links[] = '<a href="'. get_term_link( $cat->slug, 'jobman_category' ) .
+                       '" title="' . sprintf( __( 'Jobs for %s', 'jobman' ), $cat->name ) . '">' . $cat->name . '</a>';*/
+            $strJobLinks = '';
+            $arrLinks = $arrMapCatToJob[$cat->slug];
+            //var_dump($arrLinks);
+
+            if (is_array($arrLinks)) foreach($arrLinks as $link){
+                $strJobLinks.= '<a href="'. $link['job_link'] .
+                       '" title="' . sprintf( __( 'Jobs for %s', 'jobman' ), $cat->name ) . '">' . $link['job_name'] . '</a><br/>';
+            }
+            if ($i<$iCount) {
+                $links[] = "[one_third][learn_more caption='".$cat->name."']".
+                        $strJobLinks. "[/learn_more][/one_third]";
+            }
+            else {
+                //$links[] = "[one_third_last][learn_more caption='".$cat->name."']".$strJobLinks."[/learn_more][/one_third_last]";
+            }
+            //[one_third][learn_more caption="Sales Jobs"] <br></br><a href="http://myhadley.com/jobs/production-supervisor">Production Supervisor</a>[/learn_more][/one_third]
 		}
 		
 		$content .= '<h3>' . __( 'Related Categories', 'jobman' ) . '</h3>';
-		$content .= implode('<br>', $links) . '<br>';
+		//$content .= implode('<br>', $links) . '<br>';
+        $content .= implode('', $links) . '<br>';
 	}
 
     if ('all' == $initialCategory){

@@ -139,7 +139,7 @@ function jobman_display_jobs_list( $cat ) {
 		//$content .= '<h3>' . __( 'Related Categories', 'jobman' ) . '</h3>';
         $content .= '<br/>';
 		//$content .= implode('<br>', $links) . '<br>';
-        $content .= implode('', $links) . '<br>';
+        $content .= implode('', $links) . '<br/><br/><br/><br/>';
 	}
 
     if ('all' == $initialCategory){

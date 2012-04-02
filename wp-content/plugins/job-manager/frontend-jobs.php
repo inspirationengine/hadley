@@ -108,7 +108,7 @@ function jobman_display_jobs_list( $cat ) {
 	}
 	$related_cats = array_unique( $related_cats );
 
-	if( $options['related_categories'] && count( $related_cats ) > 0 ) {
+	if( $options['related_categories'] && count( $related_cats ) > 1 ) {
 		$links = array();
         $i = 0;
         $iCount = sizeof($related_cats);

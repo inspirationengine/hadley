@@ -75,8 +75,7 @@ function jobman_display_jobs_list( $cat ) {
 	add_filter( 'posts_distinct', 'jobman_job_live_distinct' );
 	
 	$jobs = get_posts( $args );
-//var_dump($jobs);
-    
+
 	$args['posts_per_page'] = '';
 	$args['offset'] = '';
 	$args['numberposts'] = -1;
@@ -95,12 +94,10 @@ function jobman_display_jobs_list( $cat ) {
 
     $arrMapCatToJob = array();
 	$related_cats = array();
-//var_dump($jobs);
 	foreach( $jobs as $id => $job ) {
 		// Get related categories
 		if( $options['related_categories'] ) {
 			$categories = wp_get_object_terms( $job->ID, 'jobman_category' );
-            //var_dump($categories);
 			if( count( $categories ) > 0 ) {
 				foreach( $categories as $cat ) {
 					$related_cats[] = $cat->slug;

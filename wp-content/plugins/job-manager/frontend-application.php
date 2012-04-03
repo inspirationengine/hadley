@@ -917,7 +917,7 @@ function jobman_email_application( $appid, $sendto = '' ) {
 
     //$interview = get_most_recent_interview($appid);
 	//$msg = "You're invited to attend an interview scheduled for " . $interview->post_date . PHP_EOL;
-	$msg = "A new application has been submitted " . PHP_EOL;
+	$msg = $appdata["data2"] . " ". $appdata["data3"] . " has submitted an application " . PHP_EOL;
 	$msg.= __( 'Application Link', 'jobman' ) . ': ' . admin_url( 'admin.php?page=jobman-list-applications&appid=' . $app->ID ) . PHP_EOL;
 
 	$parents = get_post_meta( $app->ID, 'job', false );
@@ -952,7 +952,7 @@ function jobman_email_application( $appid, $sendto = '' ) {
 				case 'checkbox':
 				case 'date':
 				case 'select':
-					$msg .= $field['label'] . ': ' . $appdata['data'.$id] . PHP_EOL;
+					if (!in_array($id, array(2, 3))) $msg .= $field['label'] . ': ' . $appdata['data'.$id] . PHP_EOL;
 					break;
 				case 'textarea':
 					$msg .= $field['label'] . ':' . PHP_EOL . $appdata['data'.$id] . PHP_EOL;
@@ -972,15 +972,14 @@ function jobman_email_application( $appid, $sendto = '' ) {
 	$header .= "Reply-To: $from" . PHP_EOL;
 	$header .= "Return-Path: $from" . PHP_EOL;
 	$header .= 'Content-type: text/plain; charset='. get_option( 'blog_charset' ) . PHP_EOL;
-    
+    //var_dump($msg);
 	wp_mail( $to, $subject, $msg, $header );
     insert_invited_colleague($appid, $to);
 }
 
 function email_applicant_on_resume_receipt($email_to){
-
     $subject = 'You successfully applied for a job at Hadley';
-    $msg = 'We received your application, and will be in touch with you shortly';
+    $msg = 'We received your application, and will be in touch with you shortly.';
     $from = 'Hadley';
     $header = "From: $from" . PHP_EOL;
 	$header .= "Reply-To: $from" . PHP_EOL;

@@ -917,8 +917,9 @@ function jobman_email_application( $appid, $sendto = '' ) {
 
     //$interview = get_most_recent_interview($appid);
 	//$msg = "You're invited to attend an interview scheduled for " . $interview->post_date . PHP_EOL;
-	$msg = $appdata["data2"] . " ". $appdata["data3"] . " has submitted an application " . PHP_EOL;
-	$msg.= __( 'Application Link', 'jobman' ) . ': ' . admin_url( 'admin.php?page=jobman-list-applications&appid=' . $app->ID ) . PHP_EOL;
+	$msg = $appdata["data2"] . " ". $appdata["data3"] . " has submitted an application: " . PHP_EOL;
+	//$msg.= __( 'Application Link', 'jobman' ) . ': ' . admin_url( 'admin.php?page=jobman-list-applications&appid=' . $app->ID ) . PHP_EOL;
+    $msg.= admin_url( 'admin.php?page=jobman-list-applications&appid=' . $app->ID ) . PHP_EOL;
 
 	$parents = get_post_meta( $app->ID, 'job', false );
 	if( ! empty( $parents ) ) {
@@ -952,7 +953,8 @@ function jobman_email_application( $appid, $sendto = '' ) {
 				case 'checkbox':
 				case 'date':
 				case 'select':
-					if (!in_array($id, array(2, 3))) $msg .= $field['label'] . ': ' . $appdata['data'.$id] . PHP_EOL;
+					// exclude First Name, Last Name because we already added them
+                    if (!in_array($id, array(2, 3))) $msg .= $field['label'] . ': ' . $appdata['data'.$id] . PHP_EOL;
 					break;
 				case 'textarea':
 					$msg .= $field['label'] . ':' . PHP_EOL . $appdata['data'.$id] . PHP_EOL;

@@ -204,5 +204,25 @@ add_shortcode("jqdgallery", "jqdgallery");
 
 
 
-
+add_action( 'init', 'create_post_type' );
+function create_post_type() {
+	register_post_type( 'product-and-solution',
+		array(
+			'labels' => array(
+				'name' => __( 'Products and Solutions' ),
+				'singular_name' => __( 'Products and Solutions' )
+			),
+		'show_ui' => true,
+    		'show_in_menu' => true,
+    'query_var' => true,
+    'rewrite' => true,
+    'capability_type' => 'post',
+		'public' => true,
+		'has_archive' => true,
+		'hierarchical' => true,
+		'supports' => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt',
+                             'trackbacks', 'custom-fields', 'comments', 'revisions', 'page-attributes', 'post-formats')
+		)
+	);
+}
 ?>

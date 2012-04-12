@@ -212,11 +212,8 @@ function create_post_type() {
 				'name' => __( 'Products and Solutions' ),
 				'singular_name' => __( 'Products and Solutions' )
 			),
-		'show_ui' => true,
-    		'show_in_menu' => true,
-    'query_var' => true,
-    'rewrite' => true,
-    'capability_type' => 'post',
+
+        'capability_type' => 'post',
 		'public' => true,
 		'has_archive' => true,
 		'hierarchical' => true,

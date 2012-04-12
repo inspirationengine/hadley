@@ -82,8 +82,9 @@ function jqdpostthumbs($args) {
 	
 	// Query the database
 	$do_not_duplicate[] = $post->ID;
+
 	$args =  array(
-		'post_type'      => 'jqdock_pages',
+		'post_type'      => $opt_type, //'products-and-solutions',
 		'post__not_in'   => $do_not_duplicate, // Do not get the post currently being viewed
 		'posts_per_page' => $qty,
 		'meta_key'       => '_thumbnail_id', // Only get posts with thumbnails set
@@ -202,20 +203,6 @@ function jqdgallery($args) {
 add_shortcode("jqdgallery", "jqdgallery");
 
 
-add_action( 'init', 'create_post_type' );
-function create_post_type() {
-	register_post_type( 'jqdock_pages',
-		array(
-			'labels' => array(
-				'name' => __( 'jqDock pages' ),
-				'singular_name' => __( 'jqDock page' )
-			),
-		'public' => true,
-		'has_archive' => true,
-		'supports' => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt',
-                             'trackbacks', 'custom-fields', 'comments', 'revisions', 'page-attributes', 'post-formats')
-		)
-	);
-}
+
 
 ?>

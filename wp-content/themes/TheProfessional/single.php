@@ -1,4 +1,10 @@
-<?php get_header(); ?>
+<?php get_header(); 
+
+if (FALSE!==strpos($_SERVER['REQUEST_URI'], 'product-and-solution')){
+require_once 'page-full.php';die;
+}
+
+?>
 	<div id="content-top" class="top-alt"></div>
 	<div id="content" class="clearfix content-alt">
 		<div id="content-area">

@@ -1985,6 +1985,12 @@ class WP_Query {
 				$q['post_type'] = '';
 		}
 		$post_type = $q['post_type'];
+		
+		if ('product-and-solution' === $post_type){
+			$q['posts_per_page'] = 0;
+		}
+
+
 		if ( !isset($q['posts_per_page']) || $q['posts_per_page'] == 0 )
 			$q['posts_per_page'] = get_option('posts_per_page');
 		if ( isset($q['showposts']) && $q['showposts'] ) {
